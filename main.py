@@ -52,5 +52,3 @@ for l in siteIndex:
     print(l)
 
 # df.iloc[i, l] for l in siteIndex
-# as;sdklf;sdlkfjs;ldfk;sldfk
-# testestese4tesstesst
