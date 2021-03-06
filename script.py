@@ -2,8 +2,8 @@ import math
 import os
 import sys
 import pandas
+import requests
 
-name = input("Your Name? ")
-print("Hello,", name)
-
-print("Yop")
+r = requests.get("https://coreyms.com")
+print(r.status_code)
+print(r.ok)
