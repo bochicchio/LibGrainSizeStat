@@ -48,10 +48,3 @@ siteNotes = [df.iloc[i - 1, l] for l in siteIndex]
 
 # get list of SAMP WT
 # siteSAMPWT = df.iloc[i, l] for l in siteIndex
-
-siteIndex[0] = 999
-
-for l in siteIndex:
-    print(l)
-
-# df.iloc[i, l] for l in siteIndex
