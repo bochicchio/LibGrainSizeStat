@@ -10,9 +10,11 @@ def getSheet(path, sheet_name=None):
 
 
 def find_string(df, string):
-    mask = np.column_stack([df[col].str.contains(string, na=False) for col in df])
-    [i, j] = np.where(mask == True)
-    return i, j if len(i) <= 1 else print(
+
+    filt = df == string
+    [i, j] = np.where(filt == True)
+
+    return i, j if i.size > 0 else print(
         "Error: More than one " + string + " found in " + sheet_name + "!"
     )
 
@@ -21,9 +23,9 @@ def find_string(df, string):
 
 import numpy as np
 import pandas as pd
-import math
 
-path = "magic.xlsx"
+
+path = "magic_resave.xlsx"
 sheet_name = "July11"
 string = "SAMP WT"
 
@@ -52,5 +54,3 @@ for l in siteIndex:
     print(l)
 
 # df.iloc[i, l] for l in siteIndex
-# as;sdklf;sdlkfjs;ldfk;sldfk
-# testestese4tesstesst
