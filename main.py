@@ -39,6 +39,7 @@ df = getSheet(path, sheet_name)
 # case of non-standard sheet layout. Default = 'SAMP WT'
 [i, j] = find_string(df, string)
 
+
 # index of site names (refenced from string above)
 siteIndex = list(np.arange(j + 1, df.shape[1]))
 
