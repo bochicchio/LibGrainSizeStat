@@ -40,6 +40,7 @@ df = getSheet(path, sheet_name)
 [i, j] = find_string(df, string)
 
 
+# s;ldmfs;l
 # index of site names (refenced from string above)
 siteIndex = list(np.arange(j + 1, df.shape[1]))
 
