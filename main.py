@@ -1,7 +1,5 @@
+#%%
 # function to import excel sheets
-# skdmsl
-# sldkfsldkfmsodkmflsdkfmsldkfmsldkfmsldkfmslkdfmo
-# lkdsnmflskdfclsdknmfldsknfldsknfldsknfldskflskfdn
 
 
 def getSheet(path, sheet_name=None):
@@ -12,7 +10,7 @@ def getSheet(path, sheet_name=None):
 # function for finding a string inside of a pandas dataframe
 
 
-def find_string(df, string):
+def findString(df, string):
 
     filt = df == string
     [i, j] = np.where(filt == True)
@@ -23,7 +21,7 @@ def find_string(df, string):
 
 
 # -----------------------------------------
-
+#%%
 import numpy as np
 import pandas as pd
 
@@ -37,18 +35,13 @@ df = getSheet(path, sheet_name)
 
 # Find the index of a string to act as a reference point in
 # case of non-standard sheet layout. Default = 'SAMP WT'
-[i, j] = find_string(df, string)
+[i, j] = findString(df, string)
 
 
-# s;ldmfs;l
 # index of site names (refenced from string above)
-siteIndex = list(np.arange(j + 1, df.shape[1]))
+siteNames = df.iloc[i - 2]
+siteNames = siteNames.dropna(1)
 
-# get list of sample site names
-siteNames = [df.iloc[i - 2, l] for l in siteIndex]
-
-# get list of sample site second line notes
-siteNotes = [df.iloc[i - 1, l] for l in siteIndex]
-
-# get list of SAMP WT
-# siteSAMPWT = df.iloc[i, l] for l in siteIndex
+# index of site subtitles (refenced from string above)
+subName = df.iloc[i - 1]
+subName = subName.dropna(1)
