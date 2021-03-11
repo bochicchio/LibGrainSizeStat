@@ -12,20 +12,21 @@ def findString(df, string, startWith=False):
         filt = df == string
         [i, j] = np.where(filt == True)
 
-    if startWith == True:
-        i = list([])
-        j = list([])
-        for col in df.columns:
-            try:
-                temp = df[col].str.startswith(string)
-            except AttributeError:
-                print("Found a blank column: #", col)
-            else:
-                ii = list(np.where(temp == True))
-                if np.sum(ii) > 0:
-                    i.append(ii)
-
-    i = list(i)
+###
+#    if startWith == True:
+#        i = list([])
+#        j = list([])
+#        for col in df.columns:
+#            try:
+#                temp = df[col].str.startswith(string)
+#            except AttributeError:
+#                print("Found a blank column: #", col)
+#            else:
+#                ii = list(np.where(temp == True))
+#                if np.sum(ii) > 0:
+#                    i.append(ii)
+#
+#    i = list(i)
     return i, j if np.size(i) == 1 else print(
         "Error: More than one "
         + string
