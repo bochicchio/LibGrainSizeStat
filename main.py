@@ -1,6 +1,6 @@
 # function to import excel sheets
-def getSheet(path, sheet_name=None):
-    df = pd.read_excel(path, sheet_name, header=None)
+def get_sheet(path, sheetName=None):
+    df = pd.read_excel(path, sheetName, header=None)
     return df
 
 
@@ -14,9 +14,15 @@ def find_string(df, string):
         else:
             ref = pd.concat([ref, filt], axis=1)
     ref = np.where(ref == True)
-    ref = list([startRef[0][0], startRef[1][0]])
+    ref = list([ref[0][0], ref[1][0]])
     return ref
 
+def extract_row(df, ref, direction)
+    if direction == 'row':
+        df.iloc[ref[0]][ref[1]:df.shape[0]]
+    
+    if direction == 'col':
+        df[ref[0]][ref[1]]
 
 # -----------------------------------------
 
@@ -24,17 +30,17 @@ import numpy as np
 import pandas as pd
 
 path = "magic_resave.xlsx"
-sheet_name = "July11"
-sampleNameString = "SAMP WT"
+sheetName = "July11"
+sampleNameString = "TS 1"
+sampleDirection = 0
 sizeFractionStartString = "SIZE (MM)"
 sizeFractionEndString = "<"
 # load sheet
-df = getSheet(path, sheet_name)
+df = get_sheet(path, sheet_name)
 
-# Find the index of a string to act as a reference point in
-# case of non-standard sheet layout. Default = 'SAMP WT'
+# Find the first sample site name 
 
-sampRef = find_string(df, sampleNameString)
+sampRef = find_string(df, sampleNameString, sampleDirection)
 
 # index of site names (refrenced from string above)
 SITENAME = df.iloc[sampRef[0] - 3]
