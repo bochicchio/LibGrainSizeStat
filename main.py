@@ -1,46 +1,77 @@
+import numpy as np
+import pandas as pd
+
+
+#%%
 # function to import excel sheets
 def get_sheet(path, sheetName=None):
     df = pd.read_excel(path, sheetName, header=None)
     return df
 
-
+# 
 def find_string(df, string):
     ref = pd.DataFrame()
-    for c in df.columns:
+    for c in df.columns:                        #loop finds true/false for string
         try:
             filt = pd.DataFrame(df[c].str.startswith(string))
         except AttributeError:
             print("Found a blank column: #", c + 1)
         else:
             ref = pd.concat([ref, filt], axis=1)
-    ref = np.where(ref == True)
-    ref = list([ref[0][0], ref[1][0]])
+    
+    ref = np.where(ref == True)                 #tuple cord. of true values 1 [row, col]/per    
+    ref = list([ref[0][0], ref[1][0]])          #convert first tuple row  to list
     return ref
 
-def extract_row(df, ref, direction)
-    if direction == 'row':
-        df.iloc[ref[0]][ref[1]:df.shape[0]]
-    
-    if direction == 'col':
-        df[ref[0]][ref[1]]
 
+
+def extract_line(df, ref, rowOffset=0, colOffset=0, d = 'row', stop = False):
+    if d == 'row':
+        ref[0] = ref[0]+colOffset
+        ref[1] = ref[1]+rowOffset
+        line = df.iloc[ref[0]+colOffset][ref[1]:df.shape[0]]
+    else:
+        line = df[ref+colOffset[0]][ref+rowOffset[1]]
+
+    if stop != False:
+        if stop.is_integer:
+            try:
+                line = line[0:stop]
+            except TypeError:
+                print('stop variable must be INT or FALSE')
+        else:
+             
+            
+
+return line
 # -----------------------------------------
+#%%
 
-import numpy as np
-import pandas as pd
+
 
 path = "magic_resave.xlsx"
 sheetName = "July11"
-sampleNameString = "TS 1"
-sampleDirection = 0
-sizeFractionStartString = "SIZE (MM)"
+df = get_sheet(path, sheetName)  #load sheet into df
+#%%
+
+# find site names
+string = "SIZE (MM)"
+ref = find_string(df, string)
+#%%
+
+d = "row"
+rowOffset = -2
+colOffset = 1
+line = extract_line(df, ref, rowOffset=0, colOffset=0, d = 'row')
+#%%
+
+
+
 sizeFractionEndString = "<"
 # load sheet
-df = get_sheet(path, sheet_name)
 
 # Find the first sample site name 
 
-sampRef = find_string(df, sampleNameString, sampleDirection)
 
 # index of site names (refrenced from string above)
 SITENAME = df.iloc[sampRef[0] - 3]
