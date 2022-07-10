@@ -1,63 +1,61 @@
 #%%
 import numpy as np
 import pandas as pd
+import util
+#from classes import data
+#from dataclasses import dataclass
 
-# function to import excel sheets
-def get_sheet(path, sheetName=None):
-    df = pd.read_excel(path, sheetName, header=None)
-    return df
-def find_string(df, string):
-    referencePoint = pd.DataFrame()
-    for c in df.columns:                        #loop finds true/false for string
-        try:
-            filt = pd.DataFrame(df[c].str.startswith(string))
-        except AttributeError:
-            print("Found a blank column: #", c + 1)
-        else:
-            referencePoint = pd.concat([referencePoint, filt], axis=1)
-    
-    referencePoint = np.where(referencePoint == True)                 #tuple cord. of true values 1 [x, y]/per    
-    referencePoint = list([referencePoint[0][0], referencePoint[1][0]])          #convert first tuple x  to list
-    return referencePoint
-def extract_line(df, referencePoint, xOffset=0, yOffset=0, direction = 'x', stop = False):
-    referencePoint[0] = referencePoint[0]+yOffset
-    referencePoint[1] = referencePoint[1]+xOffset
-      
-    if direction == 'x':
-        yStart = referencePoint[0]
-        xStart = referencePoint[1]
-        xStop = df.shape[1]
-        line = df.iloc[yStart][xStart:xStop]
-
-    if direction == 'y':
-        xStart = referencePoint[1]
-        yStart = referencePoint[0]
-        yStop = df.shape[0]
-        line = df.iloc[yStart:yStop][xStart]
-
-    if stop != False:
-        if isinstance(stop, int):
-                line = line[0:stop]
-        if isinstance(stop, str):
-                line = pd.DataFrame(line)
-                stop = find_string(line, stop)[0]
-                line = line[0:stop]
-    return line
-# -----------------------------------------
-#%%
+# load file and sheet
 path = "magic_resave.xlsx"
 sheetName = "July11"
-df = get_sheet(path, sheetName)  #load sheet into df
+df = util.get_sheet(path, sheetName)  #load sheet into df
+
 
 # find site names
 string = "SIZE (MM)"
-referencePoint = find_string(df, string)
+referencePoint = util.find_string(df, string)
+line = util.extract_line(df, referencePoint, xOffset = 1, yOffset = -3, direction = 'x')
+siteList = line
 
-direction = "y"
-xOffset = 0
-yOffset = 1
-stop = '<'
-line = extract_line(df, referencePoint, xOffset, yOffset, direction, stop)
+# find size fractions
+string = "SIZE (MM)"
+referencePoint = util.find_string(df, string)
+line = util.extract_line(df, referencePoint, xOffset = 0, yOffset = 1, direction = 'y', stop = '<')
+sizeFractions = line
+
+# find grain size fraction weights
+string = "SIZE (MM)"
+referencePoint = util.find_string(df, string)
+line = util.extract_line(df, referencePoint, xOffset = 1, yOffset = 1, direction = 'x', width = sizeFractions.shape[0])
+results = line
+
+# find site type/notes
+string = "SIZE (MM)"
+referencePoint = util.find_string(df, string)
+line = util.extract_line(df, referencePoint, xOffset = 1, yOffset = -2, direction = 'x')
+subName = line
+
+# find sample weights
+string = "SAMP WT"
+referencePoint = util.find_string(df, string)
+line = util.extract_line(df, referencePoint, xOffset = 1, yOffset = 0, direction = 'x')
+sampleWeight = line
+
+
+#%%
+data = pd.DataFrame(siteList.values, columns=['site'])
+data['subCat'] = subName
+data['sampWt'] = sampleWeight
+
+for i in data.index:
+    data.loc[i,'sizeFraction'] = sizeFractions.values
+    data.loc[i,'results'] = [results[:i].values]
+
+
+
+
+
+
 #%%
 
 
